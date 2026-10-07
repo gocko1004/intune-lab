@@ -45,14 +45,15 @@ Confirm-SecureBootUEFI                 # True
 >
 > **Cause:** the Device Health settings do not read the device's live state. They read a **Device Health Attestation** report generated at boot time and signed by the TPM.
 >
-> A Hyper-V virtual TPM has no manufacturer certificate that the attestation service will trust. It can hold keys perfectly well for BitLocker, but it cannot produce an attestation the cloud service accepts. So the report never arrives, and the setting can never be satisfied, on any VM, no matter how correctly configured.
+> **Corrected later:** my first conclusion here was that a Hyper-V virtual TPM cannot produce an attestation the service accepts, so these settings could never pass on any VM. The rebuild proved that wrong. On a Hyper-V virtual TPM 2.0, BitLocker, Secure Boot and Code Integrity all evaluated **Compliant**, see [rebuild, Compliance](../rebuild/README.md#compliance).
+>
+> What actually failed on this day was never pinned down, because it was not re-tested. Two things the rebuild showed would fit: the report is written only at boot, so a change made after boot is not seen until a restart, and Intune evaluates the report on its own schedule, about half an hour after the restart in the rebuild.
 
 > **Microsoft's rule, attestation is boot-time, not live**
 >
-> Device Health Attestation settings evaluate a signed report produced during boot. They do not query the running system. Two consequences that appear on the exam:
+> Device Health Attestation settings evaluate a signed report produced during boot. They do not query the running system. The consequence that appears on the exam: a change made after boot is not reflected until the device restarts.
 >
-> - A change made after boot is not reflected until the device restarts.
-> - Virtual machines generally cannot satisfy attestation-based settings, because the virtual TPM lacks a trusted manufacturer certificate.
+> An earlier version listed a second consequence, that virtual machines cannot satisfy these settings. The rebuild disproved it.
 
 ### The settings that worked
 
@@ -186,7 +187,7 @@ The lab kept running out of resources, so a full audit was done on the laptop.
 ## 7. What to remember for the exam
 
 - Compliance **evaluates** and returns a verdict. Configuration **changes** the device, silently.
-- Device Health Attestation settings read a boot-time signed report, not live state. VMs generally cannot satisfy them.
+- Device Health Attestation settings read a boot-time signed report, not live state. A change made after boot needs a restart before it counts.
 - Default for a device with no compliance policy is **Compliant**. Change it in production.
 - "Not applicable" means the setting does not apply, not that it failed.
 - Check Included versus Excluded on every assignment. A policy assigned to nobody saves without complaint.
