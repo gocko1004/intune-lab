@@ -108,7 +108,9 @@ Named `APUserDrivenEntraJoin`.
 >
 > Self-deploying mode uses the TPM to attest the device's identity to the service, because there is no user signing in to prove anything. That attestation requires a physical TPM 2.0 with a valid manufacturer certificate.
 >
-> A Hyper-V virtual TPM cannot provide one. This is the same limitation that made Device Health Attestation impossible on Day 4, appearing in a second place. User-driven mode was chosen for that reason, and it is the mode that matters for an employee-laptop scenario anyway.
+> A Hyper-V virtual TPM cannot provide one, and Microsoft lists virtual machines as unsupported for self-deploying and pre-provisioning. User-driven mode was chosen for that reason, and it is the mode that matters for an employee-laptop scenario anyway.
+>
+> **Corrected later:** this paragraph first said the same limitation made Device Health Attestation impossible on Day 4. The rebuild proved that wrong. On a Hyper-V virtual TPM 2.0, the BitLocker, Secure Boot and Code Integrity compliance checks all came back Compliant, see [rebuild, Compliance](../rebuild/README.md#compliance). Self-deploying needs TPM attestation to the Autopilot service, which is a separate requirement.
 
 Settings used:
 
