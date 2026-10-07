@@ -183,6 +183,8 @@ values. Overlapping rings look exactly like "Intune is not working".
 **Cause:** the Versions column read **Windows 11, version 25H2**. The name was a label typed by a
 human. The version was what the service would actually do.
 
+![Feature update report: policy Feature-Pin-24H2, Versions column Windows 11, version 25H2](screenshots/11-lab-day11-feature-pin-deploys-25h2.png)
+
 **Fix:** renamed the policy to match its behaviour.
 
 **Learned:** this is how a version pin fails quietly for months in a real tenant. Nobody reads the
@@ -212,6 +214,8 @@ policy showed potentially unwanted application protection explicitly set to **of
 
 Worse than unconfigured. An explicit "off" overrides whatever the device would otherwise do, and
 still reports as applied.
+
+![Defender Antivirus policy with PUA Protection explicitly set to off](screenshots/04-lab-day13-pua-protection-off.png)
 
 **Fix:** set it to block, saved, synced. `PUAProtection` moved from 0 to 1.
 
@@ -260,6 +264,8 @@ Show Recovery Key.
 You do not have access to view this BitLocker recovery key.
 ```
 
+![Portal refusing to show a BitLocker recovery key, key IDs blacked out](screenshots/05-lab-day13-portal-key-access-denied.png)
+
 **Investigation, in order:**
 
 1. Checked the account's directory roles. **Global Administrator**, Direct, Permanent, Active. That
@@ -278,6 +284,10 @@ GET https://graph.microsoft.com/v1.0/informationProtection/bitlocker/recoveryKey
 Both returned **200 OK** once `BitlockerKey.ReadBasic.All` and `BitlockerKey.Read.All` were consented
 in Graph Explorer.
 
+![Graph Explorer: 403 Forbidden on recoveryKeys, asking for permission consent](screenshots/05-lab-day13-graph-403-before-consent.png)
+
+![Graph Explorer: 200 OK on the same recoveryKeys endpoint](screenshots/05-lab-day13-graph-recoverykeys-200-ok.png)
+
 **Fix:** none applied. The key is readable through the API. The portal blade is what fails.
 
 **Learned:** a portal error message is a claim, not a diagnosis. Two independent checks disagreed
@@ -294,6 +304,8 @@ The device blade listed three BitLocker recovery keys for a single operating sys
 Not a fault. Every encryption event and every recovery password rotation creates a new protector and
 escrows it, and the old ones stay in the directory. This is why the recovery screen displays a **Key
 ID**, and why handing a user the wrong key is rejected with no explanation.
+
+![Three BitLocker recovery keys listed for one device, key IDs blacked out](screenshots/12-lab-day13-three-recovery-keys.png)
 
 Match the live one on the device:
 
@@ -376,6 +388,8 @@ same firewall settings and set the four merge switches to **True** while the new
 
 `Default Inbound Action` showed **Succeeded** in the same report, because both policies set it to
 Block. Identical values in two policies do not conflict. Only differing values do.
+
+![Per-setting status: each firewall merge setting listed twice as Conflict, Default Inbound Action Succeeded](screenshots/13-lab-day14-firewall-merge-conflict.png)
 
 **Fix:** removed the entire Firewall category from `Win-Security-Baseline-Lite` so one policy owns
 the firewall. Resolved by ownership, not by matching values in two places, because matching values
@@ -489,6 +503,8 @@ policy. What If evaluates a hypothetical sign-in for any user with no sign-in re
 latency.
 
 Report-only run: policy listed under "Policies that will apply", State **Report-only**.
+
+![What If: CA-Require-Compliant-Device under Policies that will apply, State Report-only](screenshots/14-lab-day15-whatif-report-only.png)
 After disabling security defaults and enabling the policy, the same run read State **On**.
 
 **The consequence, recorded because it is a real regression in this tenant.** Disabling security
@@ -646,6 +662,8 @@ Restart-Service -Name IntuneManagementExtension -Force
 Restarting the extension forces an immediate app policy evaluation instead of waiting for the hourly
 cycle. The app installed three minutes later.
 
+![7-Zip 26.03 device install status: Installed on the lab VM, UPN blacked out](screenshots/15-lab-day17-7zip-installed.png)
+
 **Learned:** a result from the wrong machine is worse than no result, because it stops the
 investigation. Every verification step needs the machine named before the command.
 
@@ -754,6 +772,8 @@ which is an avoidable support call.
 used for everything else this month.
 
 **Error text:** none. The assignment page accepted it and showed *"1 devices, 0 users"*.
+
+![App protection policy assigned to Dyn-Windows-Devices: Group Members 1 devices, 0 users](screenshots/16-lab-day19-app-protection-device-group.png)
 
 **Cause:** app protection policies apply to a **user's identity inside an app**, not to a device.
 The entire premise is that the device is unmanaged, unenrolled and unknown, so there is no device
