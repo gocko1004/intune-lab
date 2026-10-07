@@ -59,7 +59,9 @@ A licence in the tenant's pool grants nothing. It must be assigned to a user, an
 
 ### Attestation versus local evaluation
 
-Some settings read a boot-time report signed by the TPM. Others read the live device. A Hyper-V virtual TPM can do the second but not the first, which is why a correctly configured VM can be permanently unable to satisfy certain compliance settings and can never run self-deploying Autopilot.
+Some settings read a boot-time report signed by the TPM. Others read the live device. The boot-time ones only change after a restart. Self-deploying Autopilot and pre-provisioning are a different matter: they need TPM attestation to the Autopilot service, and Microsoft does not support them on virtual machines.
+
+This section first said a virtual TPM could not satisfy the boot-time compliance settings at all. The rebuild disproved that: all three passed on a Hyper-V virtual TPM 2.0.
 
 ## Diagnostic commands, by what you need to know
 
@@ -78,7 +80,7 @@ Some settings read a boot-time report signed by the TPM. Others read the live de
 | Pattern | Where it appeared | What it means |
 |---|---|---|
 | **NordVPN silently breaks portal blades** | Twice in one week, most visibly on the Autopilot import blade, `Failed to fetch; error code 0` | It runs as a desktop app, so incognito mode does not rule it out. Check the VPN before the browser. |
-| **The virtual TPM cannot attest** | Day 4 compliance, Day 5 self-deploying Autopilot | A vTPM holds keys fine but has no trusted manufacturer certificate. Anything requiring attestation is impossible on a VM. |
+| **Compliance reads the last boot** | Day 4 compliance, and the rebuild | Device Health settings read a report written at boot, so a change after boot only counts after a restart and Intune's next evaluation. Day 4 blamed the virtual TPM; the rebuild passed all three on a virtual TPM 2.0. Self-deploying and pre-provisioning still need a physical TPM. |
 | **Hyper-V reserves memory up front** | Three times, error `0x800705AA` | Close the browser before starting the VM. |
 | **Portal saves happily with nothing selected** | Group member picker (Day 2), Included versus Excluded groups (Day 4) | A policy assigned to nobody is valid and silent. Always read the assignment back. |
 | **Our own hardening blocks us later** | Day 6, error 801c03ed at Entra join | Day 2's join restriction and five-device limit stopped Day 6's deployment. The failure is rarely a broken product, it is a setting somebody chose, for a good reason, on a different day. |
