@@ -115,6 +115,8 @@ Settings used:
 - Deployment mode: **User-Driven**
 - Join to Microsoft Entra ID as: **Microsoft Entra joined**
 
+![Autopilot profile APUserDrivenEntraJoin at Review and create: User-Driven, Microsoft Entra joined](../screenshots/10-day05-autopilot-profile-user-driven.png)
+
 ## 5. The group rule: the part that decides whether any of this works
 
 > **What broke, profile stayed "Not assigned"**
@@ -144,6 +146,8 @@ Settings used:
 On the group creation form, **Microsoft Entra roles can be assigned to the group** was left as **No**. That option is for groups that hold administrative role assignments; it is unrelated to device membership and setting it to Yes adds restrictions that are not wanted here.
 
 Membership confirmed: `LABVMGOCE` present. Profile reassigned to `Dyn-Autopilot-Devices`. Profile status changed to **Assigned**.
+
+![Dyn-Autopilot-Devices members: 1 group member found, LABVMGOCE](../screenshots/09-day05-ztdid-group-member-found.png)
 
 ## 6. The Enrollment Status Page
 

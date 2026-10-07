@@ -207,6 +207,8 @@ The device was joined. The user was licensed. Enrolment refused.
 >
 > The tenant's **MDM authority** had never been set. Every other setting in the entire chain was correct and it did not matter, because the tenant had not declared which service was allowed to manage devices.
 
+![Choose MDM Authority blade with None selected: no service was allowed to manage devices](../screenshots/01-day03-mdm-authority-none.png)
+
 > **Why**
 >
 > **"MDM"**, Mobile Device Management. **MDM authority** is a single tenant-level value that names which service owns device management. Historically the choice was between Intune and Configuration Manager, and the setting still exists because a tenant must not have two systems fighting over the same devices.
